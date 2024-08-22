@@ -55,7 +55,7 @@ Bot : Essential personal information extracted from the message:
 """
 
 # Human prompt for extracting user information
-extract_user_info_assistant_prompt = HumanMessagePromptTemplate(
+extract_user_info_assistant_prompt = AIMessagePromptTemplate(
     prompt=PromptTemplate(
         input_variables = ["message"],
         template = example_output,
@@ -92,8 +92,6 @@ def extract_fields(response) :
             user_info['country'] = line.split(':')[-1].strip()
         elif 'email' in line.lower():
             user_info['email'] = line.split(':')[-1].strip()
-        elif 'job_title' in line.lower():
-            user_info['job_title'] = line.split(':')[-1].strip()
         elif 'phone' in line.lower():
             user_info['phone'] = line.split(':')[-1].strip()
         elif 'gender' in line.lower():
