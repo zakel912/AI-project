@@ -1,11 +1,16 @@
 from database.user_handler import insert_user, find_user_by_name, update_user, delete_user
-from utils.user_info_parser import extract_user_info
+from utils.user_info_parser import extract_user_info, check_missing_info
 
 # Create a new account
 def create_account(user_message):
     user_info = extract_user_info(user_message)
+
     if not user_info:
         return "Sorry, I couldn't understand the information provided. Please try again."
+    if (check_missing_info(user_info)):
+        missing_fields_formatted = ', '.join(check_missing_info(user_info))
+        return (f"Bot: I still need the following information to create your account: {missing_fields_formatted}. Please provide it.")
+    
     user_id = insert_user(user_info)
     return f"Account created for {user_info['first_name']} {user_info['last_name']}, age {user_info['age']}. User ID: {user_id}"
 
