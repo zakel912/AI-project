@@ -1,19 +1,16 @@
-from config.settings import OPENAI_API_KEY
-from utils.intent_analysis import get_intent
-from utils.db_agent_manager import db_agent_executor
-
+from utils.db_agent_manager import db_agent_executor, memory
 
 def main():
     print("Bot: Hello! How can I assist you today?")
     
     while True:
         user_message = input("You: ").strip().lower()
-
-        print(f"intent: {get_intent(user_message)}")    
+        
+        chat_history = memory.buffer_as_messages
         
         inputs = {
             "message": user_message,
-            "agent_scratchpad": ""
+            "chat_history" : chat_history,
         }
         
         try:
