@@ -72,9 +72,16 @@ extract_user_info_prompt_template = ChatPromptTemplate(
 
 # Check that all essential information has been given
 def check_missing_info(user_info):
-    required_fields = ['first_name', 'last_name', 'age', 'gender']
-    missing_fields = [field for field in required_fields if field not in user_info or not user_info[field]]
+    required_fields = ['first_name', 'last_name', 'gender', 'email', 'password']
+    missing_fields = []
+    for field in required_fields :
+        if field in user_info :
+            if len(user_info[field]) == 0 or user_info[field] == "Unknown" :
+                missing_fields.append(field)
+        else :
+            missing_fields.append(field)
     return missing_fields
+
 
 # Extract from the agent output all the information needed
 def extract_fields(response) :
