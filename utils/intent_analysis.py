@@ -7,7 +7,7 @@ prompt_template_intent = ChatPromptTemplate.from_messages([
     ("user", "Determine the intent from this message: {message}")
 ])
 
-# Determine the intent of the given message using the chat model and prompt template.
+### This code can be used to determine the user's intention from his message. ###
 def get_intent(message):
     formatted_prompt = prompt_template_intent.format_prompt(message=message)
     intent = chat_model.invoke(formatted_prompt)
