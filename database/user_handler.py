@@ -20,10 +20,10 @@ def insert_user(user_info):
     return result.inserted_id
 
 # Delete user's account
-def delete_user(first_name, last_name):
+def delete_user(first_name, last_name, password):
     db = get_database()
     collection = db['Client']
-    result = collection.delete_one({"first_name": first_name, "last_name": last_name})
+    result = collection.delete_one({"first_name": first_name, "last_name": last_name, "password" : password})
     return result.deleted_count
 
 # Search for a user in the Database
