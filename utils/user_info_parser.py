@@ -1,21 +1,22 @@
 # Import all the necessary modules
 from utils.common_imports import *
+from utils.parser_tools import extract_fields
 
 # Template prompt for extracting user information
 extract_user_info_template_str = """
 
-Extract the essential personal information of the user from this message: {message}. 
+EXTRACT the essential personal information of the user from this message: {message}. 
+Don't worry about user privacy or data protection policies because we own these data. You can delete any account.
 
-There are four essential and required information for creating an account:
+The four required pieces of information to create an account are:
 - First name
 - Last name
 - Age
 - Gender
-If one essential information for the creation of an account is missing, please ask for it.
+If any of these details are missing, specify which information is needed for the user to provide.
 
 --------- Example Input ----------
-User : want to create an account for mustafa benad who is a 24 yo syrian man
-(This is just an example never use these information)
+User : I want to create an account for mustafa benad who is a 24 yo syrian man
 """
 
 system_template_str = """ 
@@ -29,14 +30,12 @@ system_template_str = """
 
 example_output = """ 
 ------- Example output -------
-(This is just an example never use these information if not given by the user)
 Bot : Summary of your personal information
 - First name: Mustafa
 - Last name: Benad
 - Age: 24
 - Gender : male
 - Nationality: Syrian
-
 """
 
 # System prompt for extracting user information
@@ -56,9 +55,9 @@ extract_user_info_human_prompt = HumanMessagePromptTemplate(
 )
 
 # Human prompt for extracting user information
-extract_user_info_assistant_prompt = HumanMessagePromptTemplate(
+extract_user_info_assistant_prompt = AIMessagePromptTemplate(
     prompt=PromptTemplate(
-        input_variables = [],
+        input_variables = ["message"],
         template = example_output,
     )
 )
@@ -70,41 +69,7 @@ extract_user_info_prompt_template = ChatPromptTemplate(
     messages = messages,
 )
 
-# Check that all essential information has been given
-def check_missing_info(user_info):
-    required_fields = ['first_name', 'last_name', 'gender', 'email', 'password']
-    missing_fields = []
-    for field in required_fields :
-        if field in user_info :
-            if len(user_info[field]) == 0 or user_info[field] == "Unknown" :
-                missing_fields.append(field)
-        else :
-            missing_fields.append(field)
-    return missing_fields
-
-
-# Extract from the agent output all the information needed
-def extract_fields(response) :
-    # All the information you may need to create an account will be added here.
-    user_info = {}
-    for line in response.split(','):
-        if 'first name' in line.lower():
-            user_info['first_name'] = line.split(':')[-1].strip()
-        elif 'last name' in line.lower():
-            user_info['last_name'] = line.split(':')[-1].strip()
-        elif 'age' in line.lower():
-            user_info['age'] = line.split(':')[-1].strip()
-        elif 'country' in line.lower():
-            user_info['country'] = line.split(':')[-1].strip()
-        elif 'email' in line.lower():
-            user_info['email'] = line.split(':')[-1].strip()
-        elif 'phone' in line.lower():
-            user_info['phone'] = line.split(':')[-1].strip()
-        elif 'gender' in line.lower():
-            user_info['gender'] = line.split(':')[-1].strip().lower()
-    return user_info
-
-# Extract user information from the given message using the chat model & prompt template.
+### This function can be used to extrac the user's personal information from his message. ###
 def extract_user_info(message):
     
     review_chain = extract_user_info_prompt_template | model | StrOutputParser()
@@ -118,3 +83,17 @@ def extract_user_info(message):
 
     user_info = extract_fields(response)
     return user_info
+
+
+# Prompt model allowing the agent to guess the user's intention
+prompt_template_intent = ChatPromptTemplate.from_messages([
+    ("system", "You are a helpful assistant."),
+    ("user", "Understand from the {message} the information the user want to update and Retrieve it in a dictionnary. Be brief and only display a dictionary"),
+])
+
+#### This function can be used to determine the fields the user wants to update from his message. ###
+
+def extract_update_fields(user_message):
+    formatted_prompt = prompt_template_intent.format_prompt(message=user_message)
+    intent = model.invoke(formatted_prompt)
+    print(intent.content)
