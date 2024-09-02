@@ -1,34 +1,37 @@
 # AI-project
 
-Ce projet propose l'implementation d'un assitant AI, développé avec le framework Langchain. L'assitant peut réaliser des actions liées à la gestion d'une base de données d'utilisateurs.
+Ce projet propose l'implementation d'un assitant AI, développé avec le framework Langchain. L'assitant peut réaliser différentes actions liées à la gestion d'une base de données d'utilisateurs.
 
-## Prérequis
-Avant de commencer, assurez-vous d'avoir les éléments suivants installés :
-- Python 3.8 au minimum, version utilisé : Python 3.12.3
-- openai
-- pymongo
-- python-dotenv
-- langchain-openai
-- langchain-community
+### Prérequis
+- Avant de commencer, assurez-vous d'avoir les éléments suivants installés dans votre environnement virtuel (voir ci-dessous pour sa création) :
+  - Python 3.8 au minimum, version utilisé : Python 3.12.3
+  - openai
+  - pymongo
+  - python-dotenv
+  - langchain-openai
+  - langchain-community
 
 
-# Créez un environnement virtuel :
+- Il vous faudra aussi créer un compte sur MongoDB Atlas (https://account.mongodb.com/account/register). Une option gratuite est disponible.
+- Une clé API OpenAI est nécessaire.
+
+### Créez un environnement virtuel :
 Avant d'éxécuter la ligne de code suivante, créer un dossier qui contiendra votre environnement et le reste des fichiers.
 
 python -m venv venv
 
-## Activez l'environnement virtuel :
+### Activez l'environnement virtuel :
 Sur Windows :
   venv\Scripts\activate
 
 Sur Linux/MacOS :
   source venv/bin/activate
 
-## Installez les dépendances requises :
+### Installez les dépendances requises :
   pip install -r requirements.txt
 
-## Utilisation
-Intéragir avec l'assistant : python main.py
+### Utilisation
+Lancer le script : python main.py 
 
 ## Structure du Projet
 - main.py: Contient le script principal qui gère l'assistant AI.
@@ -51,7 +54,13 @@ Intéragir avec l'assistant : python main.py
   
   - utils/user_info_parser.py : Propose un premier assistant qui permet d'extraire depuis le message utilisateur ses informations personnelles et un second en dévéloppement censé déterminer du message utilisateur les informations qu'ils souhaitent mettre à jour.
 
-### Contribution
+## Configuration
+Vous devez modifiez le fichier settings.py, dans le dossier config/ en ajoutant :
+- votre clé API,
+- votre chaine de connexion pour votre base de données mongoDB
+- le nom de votre base de données.
+
+## Contribution
 Plusieurs fonctions sont encore en développement :
 
 - Update_tool est encore en phase de test.
