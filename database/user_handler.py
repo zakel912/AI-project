@@ -34,8 +34,8 @@ def find_user_by_name(first_name, last_name):
     return user
 
 # Update user's info
-def update_user(name, update_fields):
+def update_user(email, password, update_fields):
     db = get_database()
     collection = db['Client']
-    result = collection.update_one({"name": name}, {"$set": update_fields})
+    result = collection.update_one({"email": email, "password": password}, {"$set": update_fields})
     return result.modified_count
